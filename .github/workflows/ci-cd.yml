@@ -31,7 +31,8 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /home/${{ secrets.SSH_USER }}/my-app
+            export PATH=$PATH:/home/awal/.nvm/versions/node/v22.14.0/bin
+            cd /home/${{ secrets.SSH_USER }}/test-app
             git pull origin main
             npm install
             npm run build
