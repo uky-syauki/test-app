@@ -24,15 +24,6 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Copy files to server via SSH
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          source: ".next,public,package.json,ecosystem.config.js,app.js,next.config.js"
-          target: "/home/${{ secrets.SSH_USER }}/my-app"
-
       - name: Restart PM2 on server via SSH
         uses: appleboy/ssh-action@master
         with:
@@ -41,5 +32,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /home/${{ secrets.SSH_USER }}/my-app
+            git pull origin main
             npm install
+            npm run build
             pm2 startOrRestart ecosystem.config.js
